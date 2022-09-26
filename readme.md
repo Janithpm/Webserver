@@ -9,7 +9,7 @@ This server can not handle images, videos, and other binary files. It can only h
 
 - Python **os** module is used to create file paths.
 
-- Python **mimetypes** module is used to finde content types.
+- Python **mimetypes** module is used to find content types.
 
 - **GreenShock GSAP CDN** is used to test CDN and JavaScript support.
 
