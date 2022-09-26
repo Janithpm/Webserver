@@ -15,11 +15,12 @@ This server can not handle images, videos, and other binary files. It can only h
 
 ## **How to run the server**
 1. Export zip file to a folder
-2. Run the following command in the terminal or command prompt
+2. Open Command Prompt and navigate to the folder
+3. Run the following command in the command prompt
 ```bash
 python server.py
 ```
-3. Open a browser and go to [**localhost:2728**](http:/localhost:2728)
+4. Open a browser and go to [**localhost:2728**](http:/localhost:2728)
 
 
 
