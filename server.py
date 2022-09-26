@@ -29,8 +29,7 @@ def extract(header):
     params = params.split("&") if len(params) > 0 else []
     paramsObject = {}
     if params:
-        paramsObject = {param.split("=")[0]: param.split("=")[
-            1] for param in params}
+        paramsObject = {param.split("=")[0]: param.split("=")[1] for param in params}
 
     # return the method, path, and parameters
     return method, path, paramsObject
@@ -38,7 +37,6 @@ def extract(header):
 
 # Function to resolve the path of a file coresponding to request path
 def resolve_path(path):
-
     # If the path is empty, set it to index.html
     if path == "/":
         return os.path.join(os.getcwd(), "htdocs", "index.html")
@@ -62,21 +60,18 @@ def resolve_path(path):
 
 # Function for genarate the response header
 def response(status=200, content="", content_type="text/html"):
-
     # successfull responces
     if 200 <= status < 300:
         return f"HTTP/1.1 {status} OK\r\nContent-Length: {len(content)}\r\ncontent-type: {content_type}\r\n\r\n{content}"
-
     # client error responces
     if 400 <= status < 500:
         return f"HTTP/1.1 {status} Not Found\r\nContent-Length: {len(content)}\r\n\r\n"
-
     # server error responces
     if 500 <= status < 600:
         return f"HTTP/1.1 {status} Server Error\r\nContent-Length: {len(content)}\r\n\r\n"
 
 
-# Function for handling the request
+# Handling the request
 with socket(AF_INET, SOCK_STREAM) as server:
 
     # Bind the server to the localhost and port
@@ -105,14 +100,12 @@ with socket(AF_INET, SOCK_STREAM) as server:
                         content = f.read()
 
                     # cerate the response and send it
-                    res = response(
-                        200, content, mimetypes.guess_type(file_path)[0])
-                    client.send(res.encode())
+                    client.send(response(200, content, mimetypes.guess_type(file_path)[0]).encode())
 
                 except FileNotFoundError:
-                    res = response(404)
-                    client.send(res.encode())
+                    # send 404 error if file not found
+                    client.send(response(404).encode())
 
         except IndexError:
-            res = response(404)
-            client.send(res.encode())
+            # send 400 error if request is not valid
+            client.send(response(400).encode())
