@@ -93,7 +93,7 @@ with socket(AF_INET, SOCK_STREAM) as server:
             if method == 'GET':
                 try:
                     file_path = resolve_path(path)
-                    print("sent : ", file_path)
+                    print("sent: ", file_path)
 
                     # get the file
                     with open(file_path, "r") as f:
