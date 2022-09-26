@@ -25,7 +25,7 @@ python server.py
 
 ## **Files and folders structure**
 
-```
+
 Webserver
 │
 ├── server.py ( main python file )
@@ -40,4 +40,3 @@ Webserver
     └── js
         └── index.js ( contains js for index.js file )
 
-```
