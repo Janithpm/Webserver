@@ -17,7 +17,8 @@ PORT = 2728
 # Function to extract method, path, parameters from the client request
 def extract(header):
     # Split the header into lines and then into words
-    req = header.split("\r\n")[0].split(" ")
+    req_header = header.split("\r\n")
+    req = req_header[0].split(" ")
     method = req[0]  # The first word is the method
     url = req[1]  # The second word is the url
 
@@ -30,7 +31,7 @@ def extract(header):
     paramsObject = {}
     if params:
         paramsObject = {param.split("=")[0]: param.split("=")[1] for param in params}
-
+    
     # return the method, path, and parameters
     return method, path, paramsObject
 
@@ -97,6 +98,7 @@ with socket(AF_INET, SOCK_STREAM) as server:
         client, _ = server.accept()
 
         recv_header = client.recv(1024).decode()
+
         try:
             method, path, _ = extract(recv_header)
 
@@ -130,13 +132,7 @@ with socket(AF_INET, SOCK_STREAM) as server:
                 except FileNotFoundError:
                     # send 404 error if file not found
                     client.send(response(404).encode())
-
-
-            # Handle POST Method
-            elif method == 'POST':
-                # todo
-                pass
-
+              
         except IndexError:
             # send 400 error if request is not valid
             client.send(response(400).encode())
