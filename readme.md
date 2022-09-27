@@ -47,7 +47,7 @@ Webserver
     │    └── index.js ( contains js for index.js file )
     └── images
         ├── homepage.jpg 
-        ├── secondpage.jpg 
+        ├── secondpage.png 
         └── subpage.jpg 
 
 ```
