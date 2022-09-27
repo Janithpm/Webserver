@@ -60,9 +60,20 @@ def resolve_path(path):
 
 # Function for genarate the response header
 def response(status=200, content="", content_type="text/html"):
+
+    # check weather type is image or not
+    if "image" in content_type:
+        #if image, set Accept Range to bytes and remove content length
+        content_length = ""
+        accept_ranges = "Accept-Ranges: bytes\r\n"
+    else:
+        #if not image, set content length and remove Accept Range
+        content_length = f"Content-Length: {len(content)}\r\n"
+        accept_ranges = ""
+
     # successfull responces
     if 200 <= status < 300:
-        return f"HTTP/1.1 {status} OK\r\nContent-Length: {len(content)}\r\ncontent-type: {content_type}\r\n\r\n{content}"
+        return f'HTTP/1.1 {status} OK\r\n{content_length}content-type: {content_type}\r\n{accept_ranges}\r\n'
     # client error responces
     if 400 <= status < 500:
         return f"HTTP/1.1 {status} Not Found\r\nContent-Length: {len(content)}\r\n\r\n"
@@ -94,17 +105,37 @@ with socket(AF_INET, SOCK_STREAM) as server:
                 try:
                     file_path = resolve_path(path)
                     print("sent: ", file_path)
+                    file_type = mimetypes.guess_type(file_path)[0]
 
-                    # get the file
-                    with open(file_path, "r") as f:
-                        content = f.read()
+                    # check weather file is a image or not
+                    if "image" in file_type:
+                        
+                        # open file as read bytes mode
+                        with open(file_path, 'rb') as f:
+                            file = f.read()
+                            # send the response header
+                            client.send(response(status=200, content_type=file_type).encode())
+                            # send the file
+                            client.send(file)
+                    else:
+                        # get content of the file
+                        with open(file_path, "r") as f:
+                            content = f.read()
 
-                    # cerate the response and send it
-                    client.send(response(200, content, mimetypes.guess_type(file_path)[0]).encode())
+                        # send the response header
+                        client.send(response(status=200, content=content, content_type=file_type).encode())
+                        # send the content
+                        client.send(content.encode())
 
                 except FileNotFoundError:
                     # send 404 error if file not found
                     client.send(response(404).encode())
+
+
+            # Handle POST Method
+            elif method == 'POST':
+                # todo
+                pass
 
         except IndexError:
             # send 400 error if request is not valid
