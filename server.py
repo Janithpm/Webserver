@@ -60,7 +60,7 @@ def resolve_path(path):
 
 
 # Function for genarate the response header
-def response(status=200, content="", content_type="text/html"):
+def response(status=404, content="", content_type="text/html"):
 
     # check weather type is image or not
     if "image" in content_type:
